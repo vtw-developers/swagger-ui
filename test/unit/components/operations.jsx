@@ -27,7 +27,7 @@ describe("<Operations/>", function(){
       },
       specSelectors: {
         isOAS3() { return false },
-        url() { return "https://petstore.swagger.io/v2/swagger.json" },
+        url() { return "http://localhost:8073/api-doc" },
         validOperationMethods() { return ["get", "put", "post", "delete", "options", "head", "patch"] },
         taggedOperations() {
           return fromJS({
@@ -83,7 +83,7 @@ describe("<Operations/>", function(){
       },
       specSelectors: {
         isOAS3() { return true },
-        url() { return "https://petstore.swagger.io/v2/swagger.json" },
+        url() { return "http://localhost:8073/api-doc" },
         validOperationMethods() { return ["get", "put", "post", "delete", "options", "head", "patch", "trace"] },
         taggedOperations() {
           return fromJS({
