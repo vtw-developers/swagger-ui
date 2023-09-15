@@ -15,7 +15,7 @@ export default class BaseLayout extends React.Component {
   }
 
   render() {
-    const { errSelectors, specSelectors, getComponent } = this.props
+    const {errSelectors, specSelectors, getComponent} = this.props
 
     const SvgAssets = getComponent("SvgAssets")
     const InfoContainer = getComponent("InfoContainer", true)
@@ -56,7 +56,7 @@ export default class BaseLayout extends React.Component {
         <div className="info">
           <div className="loading-container">
             <h4 className="title">Failed to load API definition.</h4>
-            <Errors />
+            <Errors/>
           </div>
         </div>
       )
@@ -93,52 +93,55 @@ export default class BaseLayout extends React.Component {
     const hasServers = servers && servers.size
     const hasSchemes = schemes && schemes.size
     const hasSecurityDefinitions = !!specSelectors.securityDefinitions()
+    const param = window.location.search.split("=")
 
     return (
       <div className="swagger-ui">
-        <SvgAssets />
+        <SvgAssets/>
         <VersionPragmaFilter
           isSwagger2={isSwagger2}
           isOAS3={isOAS3}
-          alsoShow={<Errors />}
+          alsoShow={<Errors/>}
         >
-          <Errors />
-          <Row className="information-container">
-            <Col mobile={12}>
-              <InfoContainer />
-            </Col>
-          </Row>
-
-          {hasServers || hasSchemes || hasSecurityDefinitions ? (
-            <div className="scheme-container">
-              <Col className="schemes wrapper" mobile={12}>
-                {hasServers ? <ServersContainer /> : null}
-                {hasSchemes ? <SchemesContainer /> : null}
-                {hasSecurityDefinitions ? <AuthorizeBtnContainer /> : null}
+          <Errors/>
+          {param[0] === "" && <>
+            <Row className="information-container">
+              <Col mobile={12}>
+                <InfoContainer/>
               </Col>
-            </div>
-          ) : null}
-
-          <FilterContainer />
+            </Row>
+            {hasServers || hasSchemes || hasSecurityDefinitions ? (
+              <div className="scheme-container">
+                <Col className="schemes wrapper" mobile={12}>
+                  {hasServers ? <ServersContainer/> : null}
+                  {hasSchemes ? <SchemesContainer/> : null}
+                  {hasSecurityDefinitions ? <AuthorizeBtnContainer/> : null}
+                </Col>
+              </div>
+            ) : null}</>
+          }
+          <FilterContainer/>
 
           <Row>
             <Col mobile={12} desktop={12}>
-              <Operations />
+              <Operations/>
             </Col>
           </Row>
 
           {isOAS31 && (
             <Row className="webhooks-container">
               <Col mobile={12} desktop={12}>
-                <Webhooks />
+                <Webhooks/>
               </Col>
             </Row>
           )}
 
           <Row>
-            <Col mobile={12} desktop={12}>
-              <Models />
-            </Col>
+            {param[0] === "" &&
+              <Col mobile={12} desktop={12}>
+                <Models/>
+              </Col>
+            }
           </Row>
         </VersionPragmaFilter>
       </div>
