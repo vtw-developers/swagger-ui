@@ -7,7 +7,7 @@ import ConfigsPlugin from "core/plugins/configs"
 import SafeRenderPlugin from "core/plugins/safe-render"
 
 const StandalonePreset = [
-  /*TopBarPlugin,*/
+  TopBarPlugin,
   ConfigsPlugin,
   StandaloneLayoutPlugin,
   SafeRenderPlugin({
