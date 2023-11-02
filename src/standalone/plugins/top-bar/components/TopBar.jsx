@@ -12,13 +12,13 @@ class TopBar extends React.Component {
 
   constructor(props, context) {
     super(props, context)
+    this.state = {url: props.specSelectors.url(), selectedIndex: 0}
     const find = this.findUrl(props)
-    this.state = {url: find, selectedIndex: 0}
+    this.loadSpec(find)
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const find = this.findUrl(nextProps)
-    this.setState({url: find})
+    this.setState({url: nextProps.specSelectors.url()})
   }
 
   onUrlChange = (e) => {
@@ -50,7 +50,6 @@ class TopBar extends React.Component {
   }
 
   downloadUrl = (e) => {
-    console.log(this.state.url)
     this.loadSpec(this.state.url)
     e.preventDefault()
   }
@@ -101,11 +100,6 @@ class TopBar extends React.Component {
     }
   }
 
-  onFilterChange = (e) => {
-    let {target: {value}} = e
-    this.props.layoutActions.updateFilter(value)
-  }
-
   findUrl(props) {
     const param = window.location.search.split("=")
     if (param[0] == "?url" && param[1]) {
@@ -115,9 +109,9 @@ class TopBar extends React.Component {
     }
   }
 
-  onUrlChange = (e) => {
+  onFilterChange = (e) => {
     let {target: {value}} = e
-    this.setState({url: value})
+    this.props.layoutActions.updateFilter(value)
   }
 
   render() {
@@ -138,7 +132,6 @@ class TopBar extends React.Component {
     let formOnSubmit = null
 
     if (urls) {
-      console.log(urls)
       let rows = []
       urls.forEach((link, i) => {
         rows.push(<option key={i} value={link.url}>{link.name}</option>)

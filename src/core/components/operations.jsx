@@ -53,7 +53,7 @@ export default class Operations extends React.Component {
     const param = window.location.search.split("=")
     return (
       <>
-        {param[0] === "" &&
+        {param[0] !== "?path" &&
           <OperationTag
             key={"operation-" + tag}
             tagObj={tagObj}
@@ -89,7 +89,7 @@ export default class Operations extends React.Component {
             </div>
           </OperationTag>
         }
-        {param[0] !== "" &&
+        {param[0] === "?path" &&
           <div className="operation-tag-content">
             {
               operations.map(op => {
