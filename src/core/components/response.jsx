@@ -235,7 +235,7 @@ export default class Response extends React.Component {
             </section>
           ) : null}
 
-        {/*  { example || schema ? (
+          { example || schema ? (
             <ModelExample
               specPath={specPathWithPossibleSchema}
               getComponent={ getComponent }
@@ -245,7 +245,7 @@ export default class Response extends React.Component {
               example={ example }
               includeReadOnly={ true }/>
           ) : null }
-*/}
+
           { isOAS3 && examplesForMediaType ? (
               <Example
                 example={examplesForMediaType.get(this.getTargetExamplesKey(), Map({}))}
