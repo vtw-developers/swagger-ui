@@ -1,4 +1,4 @@
-import React, { cloneElement } from "react"
+import React, {cloneElement} from "react"
 import PropTypes from "prop-types"
 
 import {parseSearch, serializeSearch} from "core/utils"
@@ -12,22 +12,23 @@ class TopBar extends React.Component {
 
   constructor(props, context) {
     super(props, context)
-    this.state = { url: props.specSelectors.url(), selectedIndex: 0 }
+    const find = this.findUrl(props)
+    this.state = {url: find, selectedIndex: 0}
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    this.setState({ url: nextProps.specSelectors.url() })
+    const find = this.findUrl(nextProps)
+    this.setState({url: find})
   }
 
-  onUrlChange =(e)=> {
+  onUrlChange = (e) => {
     let {target: {value}} = e
     this.setState({url: value})
   }
 
   flushAuthData() {
-    const { persistAuthorization } = this.props.getConfigs()
-    if (persistAuthorization)
-    {
+    const {persistAuthorization} = this.props.getConfigs()
+    if (persistAuthorization) {
       return
     }
     this.props.authActions.restoreAuthorization({
@@ -41,7 +42,7 @@ class TopBar extends React.Component {
     this.props.specActions.download(url)
   }
 
-  onUrlSelect =(e)=> {
+  onUrlSelect = (e) => {
     let url = e.target.value || e.target.href
     this.loadSpec(url)
     this.setSelectedUrl(url)
@@ -49,6 +50,7 @@ class TopBar extends React.Component {
   }
 
   downloadUrl = (e) => {
+    console.log(this.state.url)
     this.loadSpec(this.state.url)
     e.preventDefault()
   }
@@ -57,7 +59,7 @@ class TopBar extends React.Component {
     let search = parseSearch()
     search["urls.primaryName"] = spec.name
     const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`
-    if(window && window.history && window.history.pushState) {
+    if (window && window.history && window.history.pushState) {
       window.history.replaceState(null, "", `${newUrl}?${serializeSearch(search)}`)
     }
   }
@@ -66,15 +68,13 @@ class TopBar extends React.Component {
     const configs = this.props.getConfigs()
     const urls = configs.urls || []
 
-    if(urls && urls.length) {
-      if(selectedUrl)
-      {
+    if (urls && urls.length) {
+      if (selectedUrl) {
         urls.forEach((spec, i) => {
-          if(spec.url === selectedUrl)
-            {
-              this.setState({selectedIndex: i})
-              this.setSearch(spec)
-            }
+          if (spec.url === selectedUrl) {
+            this.setState({selectedIndex: i})
+            this.setSearch(spec)
+          }
         })
       }
     }
@@ -84,18 +84,16 @@ class TopBar extends React.Component {
     const configs = this.props.getConfigs()
     const urls = configs.urls || []
 
-    if(urls && urls.length) {
+    if (urls && urls.length) {
       var targetIndex = this.state.selectedIndex
       let search = parseSearch()
       let primaryName = search["urls.primaryName"] || configs["urls.primaryName"]
-      if(primaryName)
-      {
+      if (primaryName) {
         urls.forEach((spec, i) => {
-          if(spec.name === primaryName)
-            {
-              this.setState({selectedIndex: i})
-              targetIndex = i
-            }
+          if (spec.name === primaryName) {
+            this.setState({selectedIndex: i})
+            targetIndex = i
+          }
         })
       }
 
@@ -103,13 +101,27 @@ class TopBar extends React.Component {
     }
   }
 
-  onFilterChange =(e) => {
+  onFilterChange = (e) => {
     let {target: {value}} = e
     this.props.layoutActions.updateFilter(value)
   }
 
+  findUrl(props) {
+    const param = window.location.search.split("=")
+    if (param[0] == "?url" && param[1]) {
+      return param[1]
+    } else {
+      return props.specSelectors.url()
+    }
+  }
+
+  onUrlChange = (e) => {
+    let {target: {value}} = e
+    this.setState({url: value})
+  }
+
   render() {
-    let { getComponent, specSelectors, getConfigs } = this.props
+    let {getComponent, specSelectors, getConfigs} = this.props
     const Button = getComponent("Button")
     const Link = getComponent("Link")
     const Logo = getComponent("Logo")
@@ -121,11 +133,12 @@ class TopBar extends React.Component {
     if (isFailed) classNames.push("failed")
     if (isLoading) classNames.push("loading")
 
-    const { urls } = getConfigs()
+    const {urls} = getConfigs()
     let control = []
     let formOnSubmit = null
 
-    if(urls) {
+    if (urls) {
+      console.log(urls)
       let rows = []
       urls.forEach((link, i) => {
         rows.push(<option key={i} value={link.url}>{link.name}</option>)
@@ -133,16 +146,17 @@ class TopBar extends React.Component {
 
       control.push(
         <label className="select-label" htmlFor="select"><span>Select a definition</span>
-          <select id="select" disabled={isLoading} onChange={ this.onUrlSelect } value={urls[this.state.selectedIndex].url}>
+          <select id="select" disabled={isLoading} onChange={this.onUrlSelect}
+                  value={urls[this.state.selectedIndex].url}>
             {rows}
           </select>
         </label>
       )
-    }
-    else {
+    } else {
       formOnSubmit = this.downloadUrl
-      control.push(<input className={classNames.join(" ")} type="text" onChange={ this.onUrlChange } value={this.state.url} disabled={isLoading} />)
-      control.push(<Button className="download-url-button" onClick={ this.downloadUrl }>Explore</Button>)
+      control.push(<input className={classNames.join(" ")} type="text" onChange={this.onUrlChange}
+                          value={this.state.url} disabled={isLoading}/>)
+      control.push(<Button className="download-url-button" onClick={this.downloadUrl}>Explore</Button>)
     }
 
     return (
@@ -153,7 +167,7 @@ class TopBar extends React.Component {
               <Logo/>
             </Link>
             <form className="download-url-wrapper" onSubmit={formOnSubmit}>
-              {control.map((el, i) => cloneElement(el, { key: i }))}
+              {control.map((el, i) => cloneElement(el, {key: i}))}
             </form>
           </div>
         </div>
